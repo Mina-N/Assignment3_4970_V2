@@ -761,7 +761,7 @@ double Data_Point::grnn_classify(Data_Point trng_set[], double sigma, double wei
     for (int i = 0; i < NUM_DATA_POINTS; i++) {
         double distance_squared = 0;
         for (int j = 0; j < NUM_FEATURES; j++) {
-            distance_squared += weights[NUM_FEATURES + j] * pow((trng_set[i].feat_vecs[j] - this->feat_vecs[j]),2);
+            distance_squared += weights[j] * pow((trng_set[i].feat_vecs[j] - this->feat_vecs[j]),2);
         }
         if (distance_squared != 0) {
             gaussian += exp(-distance_squared/(2*pow(sigma,2)));
