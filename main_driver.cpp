@@ -49,17 +49,20 @@ public:
 
 
 
-int main() {
+int main(int argc, char* argv[]) {
+    filepath = argv[1];
+    depth_limit = (int)(size_t)argv[2];
+   
     
     //prompting input
-    cout << "Please input a root URL: ";
-    cin >> filepath;
+    //cout << "Please input a root URL: ";
+    //cin >> filepath;
     
     //checking user input
-    while (depth_limit < 0) {
-        cout << "Please input a depth limit >= 0:  ";
-        cin >> depth_limit;
-    }
+    //while (depth_limit < 0) {
+    //    cout << "Please input a depth limit >= 0:  ";
+    //    cin >> depth_limit;
+    //}
     
     //push root filepath onto stack
     url_stack.push(filepath);
