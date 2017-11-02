@@ -32,9 +32,9 @@ def run():
                 classification = 0
             elif (classification == 34):
                 classification = 1
-            elif (classification > 0 && classification < 16.5):
+            elif (classification > 0 & classification < 16.5):
                 classification = - ((34 - classification) / 34)
-            elif (classification > 16.5 && classification < 34):
+            elif (classification > 16.5 & classification < 34):
                 classification = (classification / 34)
 
             #append the following content to our_dataset.txt: id, classification, feature vector
@@ -42,7 +42,7 @@ def run():
         else: #URL benign
             #append the id, classification = -1, feature vector to our_dataset.txt
 
-        id++
+        id += 1
 
 
     #run a.out again to determine new accuracy (hopefully better!)
