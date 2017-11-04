@@ -1,15 +1,15 @@
-/*#include <iostream>
- #include <string>
- #include <ctype.h>
- #include <fstream>
- #include <cstring>
- #include <stdlib.h>
- #include <iomanip>
- #include <stack>
- #include <stdio.h>
- #include <cstdlib>
- #include <sstream>
- */
+#include <iostream>
+#include <string>
+#include <ctype.h>
+#include <fstream>
+#include <cstring>
+#include <stdlib.h>
+#include <iomanip>
+#include <stack>
+#include <stdio.h>
+#include <cstdlib>
+#include <sstream>
+
 //#include "webcrawler.h"
 #include "grnn.h"
 
@@ -45,14 +45,17 @@ public:
     int init_trng_set(Data_Point trng_set[]);
     double init_trng_point(Data_Point &trng_set, string filename);
     int init_weights(double weights[], string filename);
+    void save_url(string filename, string url, double feat_vec[]);
 };
 
 
 
 int main(int argc, char* argv[]) {
     filepath = argv[1];
-    depth_limit = (int)(size_t)argv[2];
-   
+    cout << "Command line argument 2: " << argv[2] << endl;
+    depth_limit = (int) (argv[2][0] - '0');
+    cout << "Depth limit: " << depth_limit << endl;
+    
     
     //prompting input
     //cout << "Please input a root URL: ";
@@ -98,30 +101,152 @@ int main(int argc, char* argv[]) {
         //cout << "Magnitude: " << magnitude << endl;
         
         if (magnitude > 0.000001) {
-            double classification = data.grnn_classify(trng_set, 0.1237, weights); //TODO: IS THIS FUNCTION CORRECT?
+            double classification = data.grnn_classify(trng_set, 0.1237, weights); //TODO: IS THIS FUNCTION import urllib2
+import subprocess
+
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
+
+def run():
+    #root_url = raw_input("Please input url: ")
+    #depth = raw_input("Please input depth level: ")
+    #print subprocess.check_call(['./a.out', root_url, depth])
+    id = 595 #id of URL
+    
+    #read in URLs and corresponding feature vectors of 40 training instances from a .txt. file, using amazon.com as an example for now
+    
+    
+    
+    hostnames = []
+    feat_vecs = []
+    for i in range(0,10):
+        with open("new_urls/range1_" + str(i) + "_output.txt", "r") as range1:
+            line = range1.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i].append(line.split()[j+1])
+        with open("new_urls/range2_" + str(i) + "_output.txt", "r") as range2:
+            line = range2.readline()
+            hostnames.append(range2.readline().split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+1].append(line.split()[j+1])
+        with open("new_urls/range3_" + str(i) + "_output.txt", "r") as range3:
+            line = range3.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+2].append(range3.readline().split()[j+1])
+        with open("new_urls/range4_" + str(i) + "_output.txt", "r") as range4:
+            line = range4.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+3].append(range4.readline().split()[j+1])
+    
+    for hostname in hostnames:
+        some_url = "http://api.urlvoid.com/api1000/af774a8d258f8c97e0595f90f62cf5b75d5e5b32/host/" + hostname + "/"
+        content = urllib2.urlopen(some_url).read()
+        count = content.find("<count>")
+        if (count): #URL not benign
+            classification = find_between(content, "<count>", "</count>")
+            #URLVoid provides a classification from 0 to 34 out of 34, with 0 out of 34 equivalent to -1, or a benign
+            #classification, and 34 out of 34 equivalent to 1, or a malignant classification. If the classification is
+            #0 out of 34, then count is false, and we skip to the else statement. The code below alters the URLVoid
+            #classification to fit our purposes.
+            if (classification == 17):
+                classification = 0
+            elif (classification > 17):
+                classification = -1
+            elif (classification < 17):
+                classification = 1
+    
+        #append the following content to our_dataset.txt: id, classification, feature vector
+
+
+        with open("our_dataset.txt", "a") as dataset:
+            dataset.write(str(id) + " " + str(classification))
+            for j in range(0,95):
+                dataset.write(" " + str(feat_vecs[id-595][j]))
+            dataset.write("\n")
+    
+        #else: #URL benign
+        #append the id, classification = -1, feature vector to our_dataset.txt
+
+        id += 1
+
+
+#run a.out again to determine new accuracy (hopefully better!)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    run()CORRECT?
             cout << "Classification: " << classification << endl;
             cout << "Range 1: " << range1 << endl;
             cout << "Range 2: " << range2 << endl;
             cout << "Range 3: " << range3 << endl;
             cout << "Range 4: " << range4 << endl;
-        
+            
             /**
              for (int i = 0; i < NUM_FEATURES; i++) {
              cout << "Feature: " << data.feat_vecs[i] << endl;
              }
              */
-        
-        
+            
+            
             if ((classification > -1 && classification < -0.5) || (classification == -1) || (classification == -0.5)) {
+                if (range1 < 10) {
+                    web.save_url("range1_" + to_string(range1) + "_output.txt", url_stack.top(), data.feat_vecs);
+                }
                 range1++;
             }
             else if ((classification > -0.5 && classification < 0) || (classification == 0) || (classification == -0.5)) {
+                if (range2 < 10) {
+                    web.save_url("range2_" + to_string(range2) + "_output.txt", url_stack.top(), data.feat_vecs);
+                }
                 range2++;
             }
             else if ((classification > 0 && classification < 0.5) || (classification == 0) || (classification == 0.5)) {
+                if (range3 < 10) {
+                    web.save_url("range3_" + to_string(range3) + "_output.txt", url_stack.top(), data.feat_vecs);
+                }
                 range3++;
             }
             else if ((classification > 0.5 && classification < 1) || (classification == 0.5) || (classification == 1)) {
+                cout << "magnitude = " << magnitude << endl;
+                if (range4 < 10) {
+                    web.save_url("range4_" + to_string(range4) + "_output.txt", url_stack.top(), data.feat_vecs);
+                }
                 range4++;
             }
             else {
@@ -176,7 +301,7 @@ void WebCrawler::char_extractor(string filename, int k) {
 
 
 int WebCrawler::find_children(string filename_str, int depth, stack<string>& stack1, stack<int>& stack2, int i, bool leaf) {
-
+    
     char javaCall[1000] = "";
     char url[1000] = "";
     string new_url_str, unnecessary = "";
@@ -197,7 +322,7 @@ int WebCrawler::find_children(string filename_str, int depth, stack<string>& sta
     strcat(javaCall, ".txt");
     system(javaCall);
     ifstream webpage("html_source/output_" + j + ".txt");
-
+    
     while (!webpage.eof() && !leaf) {
         webpage >> setw(99) >> url;
         if (strncmp("href", url, 4) == 0) {
@@ -228,9 +353,11 @@ int WebCrawler::find_children(string filename_str, int depth, stack<string>& sta
             }
         }
     }
+     
     //  cout << "depth " << (i + 1) << " done" << endl;
     
     webpage.close();
+    
     
     return num_of_links;
 }
@@ -276,7 +403,9 @@ int WebCrawler::webcrawler(stack<string>& url_stack, stack<int>& depth_stack, in
     
     
     //Find children of URL and store them into the stack. Also store their associated depths into a stack. Saves HTML of expanded URL in a .txt file
-    find_children(filepath, depth, url_stack, depth_stack, i, depth >= depth_limit);
+    if (depth < depth_limit) {
+        find_children(filepath, depth, url_stack, depth_stack, i, depth >= depth_limit);
+    }
     
     char_extractor("output_" + to_string(i) + ".txt", i);
     i++;
@@ -323,16 +452,28 @@ double WebCrawler::init_trng_point(Data_Point &trng_set, string filename) {
     string line;
     double magnitude;
     getline(input, line);
-        trng_set = Data_Point(line, 0);
-        magnitude = 0;
+    trng_set = Data_Point(line, 0);
+    magnitude = 0;
+    for (int k = 0; k < 95; k++) {
+        magnitude += pow(trng_set.feat_vecs[k], 2);
+    }
+    if (magnitude != 0) {
         for (int k = 0; k < 95; k++) {
-            magnitude += pow(trng_set.feat_vecs[k], 2);
+            trng_set.feat_vecs[k] /= sqrt(magnitude);
         }
-        if (magnitude != 0) {
-            for (int k = 0; k < 95; k++) {
-                trng_set.feat_vecs[k] /= sqrt(magnitude);
-            }
-        }
+    }
     return magnitude;
 }
+
+void WebCrawler::save_url(string filename, string url, double feat_vec[]) {
+    ofstream output("new_urls/" + filename);
+    output << url;
+    for (int i = 0; i < 95; i++) {
+        output << " " << feat_vec[i];
+    }
+    output.close();
+}
+
+
+
 
