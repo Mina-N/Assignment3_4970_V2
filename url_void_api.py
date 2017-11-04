@@ -10,14 +10,43 @@ def find_between( s, first, last ):
         return ""
 
 def run():
-    root_url = raw_input("Please input url: ")
-    depth = raw_input("Please input depth level: ")
-    print subprocess.check_call(['./a.out', root_url, depth])
+    #root_url = raw_input("Please input url: ")
+    #depth = raw_input("Please input depth level: ")
+    #print subprocess.check_call(['./a.out', root_url, depth])
     id = 595 #id of URL
-
+    
     #read in URLs and corresponding feature vectors of 40 training instances from a .txt. file, using amazon.com as an example for now
-
-    hostnames = ["amazon.com"]
+    
+    
+    
+    hostnames = []
+    feat_vecs = []
+    for i in range(0,10):
+        with open("new_urls/range1_" + str(i) + "_output.txt", "r") as range1:
+            line = range1.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i].append(line.split()[j+1])
+        with open("new_urls/range2_" + str(i) + "_output.txt", "r") as range2:
+            line = range2.readline()
+            hostnames.append(range2.readline().split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+1].append(line.split()[j+1])
+        with open("new_urls/range3_" + str(i) + "_output.txt", "r") as range3:
+            line = range3.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+2].append(range3.readline().split()[j+1])
+        with open("new_urls/range4_" + str(i) + "_output.txt", "r") as range4:
+            line = range4.readline()
+            hostnames.append(line.split()[0])
+            feat_vecs.append([])
+            for j in range(0,95):
+                feat_vecs[4*i+3].append(range4.readline().split()[j+1])
+    
     for hostname in hostnames:
         some_url = "http://api.urlvoid.com/api1000/af774a8d258f8c97e0595f90f62cf5b75d5e5b32/host/" + hostname + "/"
         content = urllib2.urlopen(some_url).read()
@@ -28,24 +57,29 @@ def run():
             #classification, and 34 out of 34 equivalent to 1, or a malignant classification. If the classification is
             #0 out of 34, then count is false, and we skip to the else statement. The code below alters the URLVoid
             #classification to fit our purposes.
-            if (classification == 16.5):
+            if (classification == 17):
                 classification = 0
-            elif (classification == 34):
+            elif (classification > 17):
+                classification = -1
+            elif (classification < 17):
                 classification = 1
-            elif (classification > 0 & classification < 16.5):
-                classification = - ((34 - classification) / 34)
-            elif (classification > 16.5 & classification < 34):
-                classification = (classification / 34)
+    
+        #append the following content to our_dataset.txt: id, classification, feature vector
 
-            #append the following content to our_dataset.txt: id, classification, feature vector
 
-        else: #URL benign
-            #append the id, classification = -1, feature vector to our_dataset.txt
+        with open("our_dataset.txt", "a") as dataset:
+            dataset.write(str(id) + " " + str(classification))
+            for j in range(0,95):
+                dataset.write(" " + str(feat_vecs[id-595][j]))
+            dataset.write("\n")
+    
+        #else: #URL benign
+        #append the id, classification = -1, feature vector to our_dataset.txt
 
         id += 1
 
 
-    #run a.out again to determine new accuracy (hopefully better!)
+#run a.out again to determine new accuracy (hopefully better!)
 
 
 
