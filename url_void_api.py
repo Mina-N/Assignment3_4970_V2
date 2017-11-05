@@ -30,7 +30,7 @@ def run():
                 feat_vecs[4*i].append(line.split()[j+1])
         with open("new_urls/range2_" + str(i) + "_output.txt", "r") as range2:
             line = range2.readline()
-            hostnames.append(range2.readline().split()[0])
+            hostnames.append(line.split()[0])
             feat_vecs.append([])
             for j in range(0,95):
                 feat_vecs[4*i+1].append(line.split()[j+1])
@@ -39,13 +39,13 @@ def run():
             hostnames.append(line.split()[0])
             feat_vecs.append([])
             for j in range(0,95):
-                feat_vecs[4*i+2].append(range3.readline().split()[j+1])
+                feat_vecs[4*i+2].append(line.split()[j+1])
         with open("new_urls/range4_" + str(i) + "_output.txt", "r") as range4:
             line = range4.readline()
             hostnames.append(line.split()[0])
             feat_vecs.append([])
             for j in range(0,95):
-                feat_vecs[4*i+3].append(range4.readline().split()[j+1])
+                feat_vecs[4*i+3].append(line.split()[j+1])
     
     for hostname in hostnames:
         some_url = "http://api.urlvoid.com/api1000/af774a8d258f8c97e0595f90f62cf5b75d5e5b32/host/" + hostname + "/"
